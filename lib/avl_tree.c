@@ -9,6 +9,16 @@ typedef struct Tree {
 
 
 
+Tree* init_tree_node (int data) {
+    Tree* node = malloc(sizeof (Tree));
+    node->left = NULL;
+    node->right = NULL;
+    node->data = data;
+    return node;
+}
+
+
+
 static int height(Tree* node) {
     if (node == NULL) return -1;
 
@@ -102,10 +112,11 @@ Tree* avl_insert(Tree* root, Tree* new) {
 
 
 
-Tree* avl_remove(Tree* root, int data) {
+Tree* avl_remove(Tree* root, int data, int* found) {
     if (root == NULL) return NULL;
 
     if (root->data == data) {
+        if (found != NULL) *found = 1;
         Tree* new_root;
 
         // Replace right subtree with deleted node if left subtree is empty
