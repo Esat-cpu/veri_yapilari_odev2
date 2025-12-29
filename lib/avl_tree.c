@@ -9,16 +9,6 @@ typedef struct Tree {
 
 
 
-Tree* init_tree_node (int data) {
-    Tree* node = malloc(sizeof (Tree));
-    node->left = NULL;
-    node->right = NULL;
-    node->data = data;
-    return node;
-}
-
-
-
 static int height(Tree* node) {
     if (node == NULL) return -1;
 

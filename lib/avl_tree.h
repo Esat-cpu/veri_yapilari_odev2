@@ -9,7 +9,6 @@ typedef struct Tree {
 } Tree;
 
 
-Tree* init_tree_node (int data);
 Tree* avl_insert (Tree* root, Tree* new);
 Tree* avl_remove (Tree* root, int data, int* found);
 

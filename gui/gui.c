@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "avl_tree.h"
+#include "gtk_avl_tree.h"
 #include "str_to_int.h"
 
 
@@ -70,6 +71,18 @@ on_draw (GtkWidget* widget, cairo_t* cr, gpointer data)
     cairo_set_source_rgb(cr, 0.6, 0.85, 0.8);
     cairo_paint(cr);
     return FALSE;
+}
+
+
+
+
+
+static void
+on_window_destroy (GtkWidget* widget, gpointer user_data) {
+    AppData* app = user_data;
+
+    free_tree(app->root);
+    g_free(app);
 }
 
 
@@ -145,6 +158,7 @@ static void activate(GtkApplication* app, gpointer user_data) {
     g_signal_connect (insert_button, "clicked", G_CALLBACK (on_insert_click), app_data);
     g_signal_connect (remove_button, "clicked", G_CALLBACK (on_remove_click), app_data);
 
+    g_signal_connect (window, "destroy", G_CALLBACK (on_window_destroy), app_data);
 
     gtk_widget_show_all (window);
 }
@@ -156,8 +170,6 @@ static void activate(GtkApplication* app, gpointer user_data) {
 int main(int argc, char** argv) {
     GtkApplication* app;
     int status;
-
-    Tree* root = NULL;
 
     app = gtk_application_new ("com.avltree", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
