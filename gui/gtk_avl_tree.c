@@ -6,6 +6,7 @@ Tree* init_tree_node (int data) {
     Tree* node = g_malloc(sizeof (Tree));
     node->left = NULL;
     node->right = NULL;
+    node->height = 0;
     node->data = data;
     return node;
 }

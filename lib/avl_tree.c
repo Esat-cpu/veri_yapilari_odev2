@@ -3,27 +3,21 @@
 
 typedef struct Tree {
     int data;
+    int height;
     struct Tree* left;
     struct Tree* right;
 } Tree;
 
 
 
-static int height(Tree* node) {
-    if (node == NULL) return -1;
-
-    int left = height(node->left);
-    int right = height(node->right);
-
-    return ((left > right) ? left : right) + 1;
-}
-
-
 
 static int avl_value(Tree* node) {
     if (node == NULL) return 0;
 
-    return height(node->left) - height(node->right);
+    int left_height = node->left ? node->left->height : -1;
+    int right_height = node->right ? node->right->height : -1;
+
+    return left_height - right_height;
 }
 
 
@@ -34,6 +28,16 @@ static Tree* right_rotate(Tree* x) {
 
     y->right = x;
     x->left = T;
+
+    int left_h_x = x->left ? x->left->height : -1;
+    int right_h_x = x->right ? x->right->height : -1;
+    x->height = 1 + ((left_h_x > right_h_x) ? left_h_x : right_h_x);
+
+    int left_h_y = y->left ? y->left->height : -1;
+    int right_h_y = y->right ? y->right->height : -1;
+    y->height = 1 + ((left_h_y > right_h_y) ? left_h_y : right_h_y);
+
+
     return y;
 }
 
@@ -45,6 +49,16 @@ static Tree* left_rotate(Tree* x) {
 
     y->left = x;
     x->right = T;
+
+    int left_h_x = x->left ? x->left->height : -1;
+    int right_h_x = x->right ? x->right->height : -1;
+    x->height = 1 + ((left_h_x > right_h_x) ? left_h_x : right_h_x);
+
+    int left_h_y = y->left ? y->left->height : -1;
+    int right_h_y = y->right ? y->right->height : -1;
+    y->height = 1 + ((left_h_y > right_h_y) ? left_h_y : right_h_y);
+
+
     return y;
 }
 
@@ -53,6 +67,7 @@ static Tree* left_rotate(Tree* x) {
 static Tree*
 restore_balance (Tree* root)
 {
+    if (!root) return NULL;
     int balance = avl_value(root);
 
     // Check if the left tree is unbalanced
@@ -83,6 +98,10 @@ restore_balance (Tree* root)
 
     // Return root if node is balanced
     else {
+        int left_h = root->left ? root->left->height : -1;
+        int right_h = root->right ? root->right->height : -1;
+        root->height = 1 + ((left_h > right_h) ? left_h : right_h);
+
         return root;
     }
 }
@@ -96,6 +115,7 @@ Tree* avl_insert(Tree* root, Tree* new) {
         root->left = avl_insert(root->left, new);
     else
         root->right = avl_insert(root->right, new);
+
 
     return restore_balance(root);
 }
